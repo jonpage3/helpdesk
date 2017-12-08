@@ -247,6 +247,18 @@ class HelpTicketListAsJSON(Resource):
     def get(self):
         return data
 
+# practice new display for each ticket resource
+# this can create a new resource for
+# each ticket without using the render_template
+# functions defined above---could make new functions
+class New_Display(Resource):
+
+    def get(self, helpticket_id):
+            return make_response(render_template('new_display.html', helpticket=data['helptickets'][helpticket_id]),
+                                 '200')
+
+
+
 
 # After defining our resource classes, we define how URLs are assigned to
 # resources by mapping resource classes to URL patterns.
@@ -257,7 +269,7 @@ api.add_resource(HelpTicketList, '/tickets')
 api.add_resource(HelpTicketListAsJSON, '/tickets.json')
 api.add_resource(HelpTicket, '/ticket/<string:helpticket_id>')
 api.add_resource(HelpTicketAsJSON, '/ticket/<string:helpticket_id>.json')
-
+api.add_resource(New_Display,'/ticket/<string:helpticket_id>/new_display')
 
 # There is no resource mapped to the root path (/), so if a request comes in
 # for that, redirect to the HelpTicketList resource.

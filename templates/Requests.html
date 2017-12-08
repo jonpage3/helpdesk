@@ -1,0 +1,67 @@
+<!doctype html>
+
+<body>
+<h1>Requests</h1>
+  <!---templated query link to filter by a search term--->
+  <form class="search" action="/Requests" method="get">
+    <input name="q" type="text">
+    <input type="submit" value="search for a request">
+  </form>
+  <table class="collection">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Request ID</th>
+        <th>Item Title</th>
+        <th>OCLC #</th>
+        <th>Date Created</th>
+        <th>Item Location</th>
+        <th>Pickup Location</th>
+        <th>Request Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr class="request">
+        <td class="username">jepage</td>
+        <td class="id" >
+          <!---outbound link to individual request---->
+          <a rel="item" href=/request2793>2793</a>
+        </td>
+        <td class="title">Pride and Prejudice</td>
+        <td class="oclc">262374114</td>
+        <td class="date">2017-11-16</td>
+        <td class="item_home">Davis Library</td>
+        <td class="pickup">Davis Library</td>
+        <td class="status">Awaiting Stacks Searching</td>
+      </tr>
+      <tr class="request">
+        <td class="username">jepage</td>
+        <td class="id">
+          <!---outbound link to individual request---->
+          <a rel="item" href=/request2794>2794</a>
+        </td>
+        <td class="title">Persuasion</td>
+        <td class="oclc">709670260</td>
+        <td class="date">2017-11-17</td>
+        <td class="item_home">Library Service Center</td>
+        <td class="pickup">Art Library</td>
+        <td class="status">In Transit</td>
+      </tr>
+    </tbody>
+  </table>
+  <!---non-idempotent update link for creating a new item request---->
+  <form class="request-update" action="/Requests.html" method="post">
+    <label>Title</label>:
+      <input name="title" type="text"/>
+    <br>
+    <label>Pickup Location</label>:
+      <input name="pickup" type="text"/>
+    <br>
+    <label>OCLC #</label>:
+      <input name="oclc" type="text"/>
+    <br>
+    <input class="create" type="submit" value="Submit" value="Submit new request">
+    <br>
+  </form>
+</body>

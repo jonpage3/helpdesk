@@ -1,0 +1,14 @@
+{
+  "requests": {
+    "2793": {
+      "username": "jepage",
+      "title": "Pride and Prejudice",
+      "@id": "request/2793",
+      "oclc": "262374114",
+      "time": "2017-12-06T12:58",
+      "location": "Davis Library",
+      "pickup": "Davis Library",
+      "status": "Awaiting Stacks Searching"
+    }
+  }
+}

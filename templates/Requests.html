@@ -21,33 +21,22 @@
       </tr>
     </thead>
     <tbody>
-      
+
+      {% for request_id,request in requests %}
       <tr class="request">
-        <td class="username">jepage</td>
+        <td class="username">{{ request.username }}</td>
         <td class="id" >
           <!---outbound link to individual request---->
           <a rel="item" href=/request2793>2793</a>
         </td>
-        <td class="title">Pride and Prejudice</td>
-        <td class="oclc">262374114</td>
-        <td class="date">2017-11-16</td>
-        <td class="item_home">Davis Library</td>
-        <td class="pickup">Davis Library</td>
-        <td class="status">Awaiting Stacks Searching</td>
+        <td class="title">{{ request.title }}</td>
+        <td class="oclc">{{ request.oclc }}</td>
+        <td class="date">{{ request.time }}</td>
+        <td class="item_home">{{ request.location }}</td>
+        <td class="pickup">{{ request.pickup }}</td>
+        <td class="status">{{ request.status }}</td>
       </tr>
-      <tr class="request">
-        <td class="username">jepage</td>
-        <td class="id">
-          <!---outbound link to individual request---->
-          <a rel="item" href=/request2794>2794</a>
-        </td>
-        <td class="title">Persuasion</td>
-        <td class="oclc">709670260</td>
-        <td class="date">2017-11-17</td>
-        <td class="item_home">Library Service Center</td>
-        <td class="pickup">Art Library</td>
-        <td class="status">In Transit</td>
-      </tr>
+      {% endfor %}
     </tbody>
   </table>
   <!---non-idempotent update link for creating a new item request---->

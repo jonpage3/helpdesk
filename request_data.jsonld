@@ -9,6 +9,15 @@
       "location": "Davis Library",
       "pickup": "Davis Library",
       "status": "Awaiting Stacks Searching"
+    },
+    "2794": {
+      "username": "jepage",
+      "title": "Persuasion",
+      "oclc": "709670260",
+      "time": "2017-12-08T17:41",
+      "location": "Library Service Center",
+      "pickup": "Art Library",
+      "status": "In Transit"
     }
   }
 }

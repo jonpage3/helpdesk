@@ -42,6 +42,8 @@ PRIORITIES = ('closed', 'low', 'normal', 'high')
 with open('data.jsonld') as data:
     data = json.load(data)
 
+with open('request_data.jsonld') as request_data:
+    request_data = json.load(request_data)
 
 # The next three functions implement simple authentication.
 
@@ -173,6 +175,8 @@ def render_helpticket_list_as_html(helptickets):
         helptickets=helptickets,
         priorities=PRIORITIES)
 
+def render_request_list_as_html(requests):
+    return render_template('Requests.html',requests=requests)
 
 # Now we can start defining our resource classes. We define four classes:
 # HelpTicket, HelpTicketAsJSON, HelpTicketList, and HelpTicketListAsJSON.
@@ -242,6 +246,15 @@ class HelpTicketList(Resource):
                 filter_and_sort_helptickets()), 201)
 
 
+# defines our request list resource
+class RequestList(Resource):
+
+    def get(self):
+        return make_response(render_request_list_as_html(request_data['requests'].items()),
+                                 '200')
+
+
+
 # Define a resource for getting a JSON representation of the help ticket list.
 class HelpTicketListAsJSON(Resource):
     def get(self):
@@ -270,13 +283,13 @@ api.add_resource(HelpTicketListAsJSON, '/tickets.json')
 api.add_resource(HelpTicket, '/ticket/<string:helpticket_id>')
 api.add_resource(HelpTicketAsJSON, '/ticket/<string:helpticket_id>.json')
 api.add_resource(New_Display,'/ticket/<string:helpticket_id>/new_display')
-
+api.add_resource(RequestList,'/requests')
 # There is no resource mapped to the root path (/), so if a request comes in
 # for that, redirect to the HelpTicketList resource.
 
 @app.route('/')
 def index():
-    return redirect(api.url_for(HelpTicketList), code=303)
+    return redirect(api.url_for(RequestList), code=303)
 
 
 # Finally we add some headers to all of our HTTP responses which will allow

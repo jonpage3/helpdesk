@@ -3,7 +3,6 @@ This is an example of a simple web API implemented using
 [Flask-RESTful](http://flask-restful.readthedocs.org/en/latest/).
 
 To run it:
-
 1. Install required dependencies:
    ```
    $ pip install -r requirements.txt

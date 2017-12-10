@@ -37,6 +37,9 @@ from functools import wraps
 # These are the values that the "priority" property can take on a help ticket.
 PRIORITIES = ('closed', 'low', 'normal', 'high')
 
+PICKUP_LOCATIONS = ('Davis Library','Undergraduate Library','Science Library Annex',
+                    'Art Library','Law Library','SILS Library')
+
 # Load data from disk.
 # This simply loads the data from our "database," which is just a JSON file.
 with open('data.jsonld') as data:
@@ -77,12 +80,13 @@ def requires_auth(f):
 def generate_id(size=6, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-
-#def generate_maxid(requests):
-#    IDs =[]
- #   for x in requests['id']:
-  #      IDs.append(int(x))
-   # return IDs.max()
+# helps generate an ID for a new request
+# based on number of most recent request
+def generate_maxid(requests):
+    IDs =[]
+    for x in requests:
+        IDs.append(int(requests[x]['id']))
+    return max(IDs)
 
 # Respond with 404 Not Found if no help ticket with the specified ID exists.
 def error_if_helpticket_not_found(helpticket_id):
@@ -175,7 +179,7 @@ query_parser = reqparse.RequestParser()
 query_parser.add_argument(
     'query', type=str, default='')
 #query_parser.add_argument(
-    #'sort_by', type=str, choices=('priority', 'time'), default='time')
+#    'sort_by', type=str, choices=('priority', 'time'), default='time')
 
 
 # Then we define a couple of helper functions for inserting data into HTML
@@ -192,7 +196,7 @@ def render_helpticket_as_html(helpticket):
 
 def render_request_as_html(request):
     return render_template(
-        'request.html', request=request
+        'request.html', request=request,pickups=PICKUP_LOCATIONS
     )
 
 # Given the data for a list of help tickets, generate an HTML representation
@@ -290,7 +294,7 @@ class RequestList(Resource):
 
     def post(self):
         request = new_request_parser.parse_args()
-        request_id = generate_id()
+        request_id = str(generate_maxid(request_data['requests']) + 1)
         request['@id'] = 'request/' + request_id
         request['time'] = datetime.isoformat(datetime.now(),timespec='minutes')
         request['status'] = 'Awaiting Circulation Processing'
@@ -327,9 +331,10 @@ api.add_resource(HelpTicketAsJSON, '/ticket/<string:helpticket_id>.json')
 api.add_resource(New_Display,'/ticket/<string:helpticket_id>/new_display')
 api.add_resource(RequestList,'/requests')
 api.add_resource(Request,'/request/<string:request_id>')
+
+
 # There is no resource mapped to the root path (/), so if a request comes in
 # for that, redirect to the HelpTicketList resource.
-
 @app.route('/')
 def index():
     return redirect(api.url_for(RequestList), code=303)

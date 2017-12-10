@@ -40,23 +40,48 @@
   <!-----outbound link to delivery times for different pickup locations---->
   <a rel="service-locations" href="eta2793">Estimated Delivery Times for Different Pickup Locations</a>
   <br>
-  <form class="request-update" action="request2793.html" method="patch">
+  <form class="request-update" action="{{ url_for('request',request_id=request_id) }}" method="patch">
     <br>
     <label>Update Pickup Location
      <select name="pickup">
-       <option  selected="selected">Davis Library</option>
-       <option>Undergraduate Library</option>
-       <option>Art Library</option>
-       <option>Law Library</option>
-       <option>SILS Library</option>
-       <option>Science Library Annex</option>
+       {% for value in pickups %}
+       <option value="{{ value }}" {% if request.pickup == value %}selected{% endif %}>
+           {{ value }}
+       </option>
+       {% endfor %}
      </select>
     </label>
     <br>
     <label>Notes
+      <ul>
+          {% for note in request.notes %}
+          <li>
+              <p>{{ note }}</p>
+          </li>
+          {% endfor %}
+      </ul>
       <textarea name="notes"></textarea>
     </label>
     <br>
     <input class="update" type="submit" value="update Item Request">
+
+    <script>
+      var form = document.querySelector('form.request-update');
+      var button = document.querySelector('form.request-update input.update');
+
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        var request = new XMLHttpRequest();
+        request.open('PATCH', window.location.pathname);
+        request.onreadystatechange = function () {
+          if (XMLHttpRequest.DONE === request.readyState
+              && 200 === request.status) {
+            window.location.reload(true);
+          }
+        }
+        request.send(new FormData(form));
+      }, false);
+   </script>
   </form>
 </body>
+

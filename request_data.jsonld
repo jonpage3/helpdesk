@@ -10,7 +10,8 @@
       "pickup": "Davis Library",
       "callnumber": "PR4034 .P7 2008",
       "id": "2793",
-      "status": "Awaiting Stacks Searching"
+      "status": "Awaiting Stacks Searching",
+      "notes": []
     },
     "2794": {
       "username": "jepage",
@@ -21,7 +22,8 @@
       "pickup": "Art Library",
       "callnumber": "PR4034 .P4 2011",
       "id": "2794",
-      "status": "In Transit"
+      "status": "In Transit",
+      "notes": ["Any edition is fine."]
     }
   }
 }

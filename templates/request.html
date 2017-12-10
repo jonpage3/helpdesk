@@ -1,0 +1,62 @@
+<!doctype html>
+
+<body>
+  <!----outbound link to collection of requests----->
+  <a rel="collection" href="{{ url_for('requestlist') }}">Total Requests</a>
+  <table class="request">
+    <thead>
+      <tr>
+        <th>Request {{ request.id }}</th>
+      </tr>
+    <tbody>
+      <tr>
+        <td>Title:</td>
+        <td class="title">{{request.title}}</td>
+      </tr>
+      <tr>
+        <td>Call #:</td>
+        <td class="callnumber">{{ request.callnumber }}</td>
+      </tr>
+      <tr>
+        <td>OCLC #:</td>
+        <td class="oclc">{{ request.oclc }}</td>
+      </tr>
+      <tr>
+        <td>Item Location:</td>
+        <td class="item_home">{{ request.location }}</td>
+      </tr>
+      <tr>
+        <td>Pickup Location</td>
+        <td class="pickup">{{ request.pickup }}</td>
+      </tr>
+      <tr>
+        <td>ETA:</td>
+        <td class="eta">2017-11-17</td>
+      </tr>
+    </tbody>
+    </thead>
+  </table>
+  <br>
+  <!-----outbound link to delivery times for different pickup locations---->
+  <a rel="service-locations" href="eta2793">Estimated Delivery Times for Different Pickup Locations</a>
+  <br>
+  <form class="request-update" action="request2793.html" method="patch">
+    <br>
+    <label>Update Pickup Location
+     <select name="pickup">
+       <option  selected="selected">Davis Library</option>
+       <option>Undergraduate Library</option>
+       <option>Art Library</option>
+       <option>Law Library</option>
+       <option>SILS Library</option>
+       <option>Science Library Annex</option>
+     </select>
+    </label>
+    <br>
+    <label>Notes
+      <textarea name="notes"></textarea>
+    </label>
+    <br>
+    <input class="update" type="submit" value="update Item Request">
+  </form>
+</body>

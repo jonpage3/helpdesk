@@ -78,6 +78,12 @@ def generate_id(size=6, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
+#def generate_maxid(requests):
+#    IDs =[]
+ #   for x in requests['id']:
+  #      IDs.append(int(x))
+   # return IDs.max()
+
 # Respond with 404 Not Found if no help ticket with the specified ID exists.
 def error_if_helpticket_not_found(helpticket_id):
     if helpticket_id not in data['helptickets']:
@@ -105,6 +111,16 @@ def filter_and_sort_helptickets(query='', sort_by='time'):
 
     return sorted(filtered_helptickets, key=get_sort_value, reverse=True)
 
+#Filter requests
+def filter_request(query=''):
+    def matches_query(item):
+        (request_id,request) = item
+        text = request['title'] + request['pickup'] + request['status']
+        return query.lower() in text
+
+    filtered_requests = filter(matches_query,request_data['requests'].items())
+
+    return filtered_requests
 
 # Now we define three incoming HTTP request parsers using the Flask-RESTful
 # framework <https://flask-restful.readthedocs.io/en/latest/reqparse.html>.
@@ -129,11 +145,19 @@ def nonempty_string(x):
 
 # Specify the data necessary to create a new help ticket.
 # "from", "title", and "description" are all required values.
-new_helpticket_parser = reqparse.RequestParser()
-for arg in ['from', 'title', 'description']:
-    new_helpticket_parser.add_argument(
+#new_helpticket_parser = reqparse.RequestParser()
+#for arg in ['from', 'title', 'description']:
+    #new_helpticket_parser.add_argument(
+        #arg, type=nonempty_string, required=True,
+        #help="'{}' is a required value".format(arg))
+
+# Specify the data necessary to create a new request
+#"title", 'item location', "pickup location" and "oclc" are required values
+new_request_parser = reqparse.RequestParser()
+for arg in ['username','title', 'location','pickup','oclc']:
+    new_request_parser.add_argument(
         arg, type=nonempty_string, required=True,
-        help="'{}' is a required value".format(arg))
+    help="'{}' is a required value".format(arg))
 
 
 # Specify the data necessary to update an existing help ticket.
@@ -150,8 +174,8 @@ update_helpticket_parser.add_argument(
 query_parser = reqparse.RequestParser()
 query_parser.add_argument(
     'query', type=str, default='')
-query_parser.add_argument(
-    'sort_by', type=str, choices=('priority', 'time'), default='time')
+#query_parser.add_argument(
+    #'sort_by', type=str, choices=('priority', 'time'), default='time')
 
 
 # Then we define a couple of helper functions for inserting data into HTML
@@ -166,6 +190,10 @@ def render_helpticket_as_html(helpticket):
         helpticket=helpticket,
         priorities=reversed(list(enumerate(PRIORITIES))))
 
+def render_request_as_html(request):
+    return render_template(
+        'request.html', request=request
+    )
 
 # Given the data for a list of help tickets, generate an HTML representation
 # of that list.
@@ -207,6 +235,13 @@ class HelpTicket(Resource):
         return make_response(
             render_helpticket_as_html(helpticket), 200)
 
+# Define the request resource
+class Request(Resource):
+
+    # If a request with id does not exist,
+    # respond with a 404, otherwise respond with an HTML representation
+    def get(self, request_id):
+        return make_response(render_request_as_html(request_data['requests'][request_id]),200)
 
 # Define a resource for getting a JSON representation of a help ticket.
 class HelpTicketAsJSON(Resource):
@@ -245,14 +280,23 @@ class HelpTicketList(Resource):
             render_helpticket_list_as_html(
                 filter_and_sort_helptickets()), 201)
 
-
 # defines our request list resource
 class RequestList(Resource):
-
+    #responds with an HTML representation of the requests
     def get(self):
-        return make_response(render_request_list_as_html(request_data['requests'].items()),
+        query = query_parser.parse_args()
+        return make_response(render_request_list_as_html(filter_request(**query)),
                                  '200')
 
+    def post(self):
+        request = new_request_parser.parse_args()
+        request_id = generate_id()
+        request['@id'] = 'request/' + request_id
+        request['time'] = datetime.isoformat(datetime.now(),timespec='minutes')
+        request['status'] = 'Awaiting Circulation Processing'
+        request['id'] = request_id
+        request_data['requests'][request_id] = request
+        return make_response(render_request_list_as_html(filter_request()),201)
 
 
 # Define a resource for getting a JSON representation of the help ticket list.
@@ -271,8 +315,6 @@ class New_Display(Resource):
                                  '200')
 
 
-
-
 # After defining our resource classes, we define how URLs are assigned to
 # resources by mapping resource classes to URL patterns.
 
@@ -284,6 +326,7 @@ api.add_resource(HelpTicket, '/ticket/<string:helpticket_id>')
 api.add_resource(HelpTicketAsJSON, '/ticket/<string:helpticket_id>.json')
 api.add_resource(New_Display,'/ticket/<string:helpticket_id>/new_display')
 api.add_resource(RequestList,'/requests')
+api.add_resource(Request,'/request/<string:request_id>')
 # There is no resource mapped to the root path (/), so if a request comes in
 # for that, redirect to the HelpTicketList resource.
 

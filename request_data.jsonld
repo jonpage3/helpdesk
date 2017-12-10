@@ -8,6 +8,8 @@
       "time": "2017-12-06T12:58",
       "location": "Davis Library",
       "pickup": "Davis Library",
+      "callnumber": "PR4034 .P7 2008",
+      "id": "2793",
       "status": "Awaiting Stacks Searching"
     },
     "2794": {
@@ -17,6 +19,8 @@
       "time": "2017-12-08T17:41",
       "location": "Library Service Center",
       "pickup": "Art Library",
+      "callnumber": "PR4034 .P4 2011",
+      "id": "2794",
       "status": "In Transit"
     }
   }

@@ -4,8 +4,11 @@
 <h1>Requests</h1>
   <!---templated query link to filter by a search term--->
   <form class="search" action="/Requests" method="get">
-    <input name="q" type="text">
-    <input type="submit" value="search for a request">
+    <input name="query" type="text" value="{{ request.args['query'] }}">
+    {% if 'query' in request.args %}
+    <input name="query" type="hidden" value="{{ request.args['query'] }}">
+    {% endif %}
+    <input class="query" type="submit" value="search for a request">
   </form>
   <table class="collection">
     <thead>
@@ -27,7 +30,7 @@
         <td class="username">{{ request.username }}</td>
         <td class="id" >
           <!---outbound link to individual request---->
-          <a rel="item" href=/request2793>2793</a>
+          <a rel="item" href="{{ url_for('request',request_id=request_id) }}">{{ request_id }}</a>
         </td>
         <td class="title">{{ request.title }}</td>
         <td class="oclc">{{ request.oclc }}</td>
@@ -40,10 +43,16 @@
     </tbody>
   </table>
   <!---non-idempotent update link for creating a new item request---->
-  <form class="request-update" action="/Requests.html" method="post">
+  <form class="request-update" action="{{ url_for('requestlist') }}" method="post">
+    <label>Username</label>:
+      <input name="username" type="text"/>
+    <br>
     <label>Title</label>:
       <input name="title" type="text"/>
     <br>
+    <label>Item Location</label>:
+      <input name="location" type="text"/>
+     <br>
     <label>Pickup Location</label>:
       <input name="pickup" type="text"/>
     <br>

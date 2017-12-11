@@ -90,11 +90,14 @@ def generate_maxid(requests):
 
 ##function to help generate ETAs for a request
 def generate_etas(request):
+    other_etas = {}
     if request['pickup'] == request['location']:
         if request['status'] == 'Awaiting Circulation Processing':
             request['eta'] = (datetime.datetime.now() + datetime.timedelta(days=2)).isoformat(timespec='minutes')
+            other_etas['eta'] = (datetime.datetime.now() + datetime.timedelta(days=3)).isoformat(timespec='minutes')
         elif request['status'] == 'Awaiting Stacks Searching':
             request['eta'] =(datetime.datetime.now() + datetime.timedelta(days=1)).isoformat(timespec='minutes')
+            other_etas['eta'] =(datetime.datetime.now() + datetime.timedelta(days=2)).isoformat(timespec='minutes')
         else:
             request['eta'] = 'Request Finished'
     else:

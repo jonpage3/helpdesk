@@ -30,7 +30,7 @@ from flask_restful import Api, Resource, reqparse, abort
 import json
 import random
 import string
-from datetime import datetime
+import datetime
 from functools import wraps
 
 # Define some constants for our priority levels.
@@ -87,6 +87,25 @@ def generate_maxid(requests):
     for x in requests:
         IDs.append(int(requests[x]['id']))
     return max(IDs)
+
+##function to help generate ETAs for a request
+def generate_etas(request):
+    if request['pickup'] == request['location']:
+        if request['status'] == 'Awaiting Circulation Processing':
+            request['eta'] = (datetime.datetime.now() + datetime.timedelta(days=2)).isoformat(timespec='minutes')
+        elif request['status'] == 'Awaiting Stacks Searching':
+            request['eta'] =(datetime.datetime.now() + datetime.timedelta(days=1)).isoformat(timespec='minutes')
+        else:
+            request['eta'] = 'Request Finished'
+    else:
+        if request['status'] == 'Awaiting Circulation Processing':
+            request['eta'] = (datetime.datetime.now() + datetime.timedelta(days=3)).isoformat(timespec='minutes')
+        elif request['status'] == 'Awaiting Stacks Searching':
+            request['eta'] = (datetime.datetime.now() + datetime.timedelta(days=2)).isoformat(timespec='minutes')
+        elif request['status'] == 'In Transit':
+            request['eta'] = (datetime.datetime.now() + datetime.timedelta(days=1)).isoformat(timespec='minutes')
+        else:
+            request['eta'] = 'Request Finished'
 
 # Respond with 404 Not Found if no help ticket with the specified ID exists.
 def error_if_helpticket_not_found(helpticket_id):
@@ -257,6 +276,7 @@ class Request(Resource):
     # If a request with id does not exist,
     # respond with a 404, otherwise respond with an HTML representation
     def get(self, request_id):
+        generate_etas(request_data['requests'][request_id])
         return make_response(render_request_as_html(request_data['requests'][request_id]),200)
 
     def patch(self,request_id):
@@ -271,6 +291,7 @@ class Request(Resource):
 class ETA(Resource):
 
     def get(self,request_id):
+        generate_etas(request_data['requests'][request_id])
         return make_response(render_eta_list_as_html(request_data['requests'][request_id]),200)
 
 # Define a resource for getting a JSON representation of a help ticket.
@@ -322,7 +343,7 @@ class RequestList(Resource):
         request = new_request_parser.parse_args()
         request_id = str(generate_maxid(request_data['requests']) + 1)
         request['@id'] = 'request/' + request_id
-        request['time'] = datetime.isoformat(datetime.now(),timespec='minutes')
+        request['time'] = datetime.datetime.now().isoformat(timespec='minutes')
         request['status'] = 'Awaiting Circulation Processing'
         request['id'] = request_id
         request_data['requests'][request_id] = request

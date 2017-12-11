@@ -5,7 +5,7 @@
   <h1> Request {{ request.id }}</h1>
   <p>{{ request.title }}</p>
   <p>Pickup Location: {{ request.pickup }}</p>
-  <p>Estimated Arrival Date: 11/17/2017</p>
+  <p>Estimated Arrival Date: {{ request.eta }}</p>
   <!---link to sort locations by arrival dates--->
   <a rel="alternate" href="eta2793?sort-by=eta">Sort by Arrival Dates</a>
   <table>

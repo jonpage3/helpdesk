@@ -90,26 +90,39 @@ def generate_maxid(requests):
 
 ##function to help generate ETAs for a request
 def generate_etas(request):
+    def eta(num):
+        return (datetime.datetime.now() + datetime.timedelta(days=num)).isoformat(timespec='minutes')
+
     other_etas = {}
+
     if request['pickup'] == request['location']:
         if request['status'] == 'Awaiting Circulation Processing':
-            request['eta'] = (datetime.datetime.now() + datetime.timedelta(days=2)).isoformat(timespec='minutes')
-            other_etas['eta'] = (datetime.datetime.now() + datetime.timedelta(days=3)).isoformat(timespec='minutes')
+            request['eta'] = eta(2)
+            other_etas['eta'] = eta(3)
         elif request['status'] == 'Awaiting Stacks Searching':
-            request['eta'] =(datetime.datetime.now() + datetime.timedelta(days=1)).isoformat(timespec='minutes')
-            other_etas['eta'] =(datetime.datetime.now() + datetime.timedelta(days=2)).isoformat(timespec='minutes')
+            request['eta'] = eta(1)
+            other_etas['eta'] =eta(2)
         else:
             request['eta'] = 'Request Finished'
     else:
         if request['status'] == 'Awaiting Circulation Processing':
-            request['eta'] = (datetime.datetime.now() + datetime.timedelta(days=3)).isoformat(timespec='minutes')
+            request['eta'] = eta(3)
+            other_etas['eta'] = eta(3)
+            #specify difference in changing pickup location
+            #to book location
+            other_etas['home'] = eta(2)
         elif request['status'] == 'Awaiting Stacks Searching':
-            request['eta'] = (datetime.datetime.now() + datetime.timedelta(days=2)).isoformat(timespec='minutes')
+            request['eta'] = eta(2)
+            other_etas['eta'] = eta(2)
+            other_etas['home'] = eta(1)
         elif request['status'] == 'In Transit':
-            request['eta'] = (datetime.datetime.now() + datetime.timedelta(days=1)).isoformat(timespec='minutes')
+            request['eta'] = eta(1)
+            other_etas['eta'] = eta(1)
+
         else:
             request['eta'] = 'Request Finished'
 
+    return other_etas
 # Respond with 404 Not Found if no help ticket with the specified ID exists.
 def error_if_helpticket_not_found(helpticket_id):
     if helpticket_id not in data['helptickets']:
@@ -236,9 +249,9 @@ def render_helpticket_list_as_html(helptickets):
         helptickets=helptickets,
         priorities=PRIORITIES)
 
-def render_eta_list_as_html(request):
+def render_eta_list_as_html(request,other_etas):
     return render_template(
-        'eta.html',request=request,pickups=PICKUP_LOCATIONS
+        'eta.html',request=request,pickups=PICKUP_LOCATIONS,other_etas = other_etas
     )
 
 def render_request_list_as_html(requests):
@@ -294,8 +307,8 @@ class Request(Resource):
 class ETA(Resource):
 
     def get(self,request_id):
-        generate_etas(request_data['requests'][request_id])
-        return make_response(render_eta_list_as_html(request_data['requests'][request_id]),200)
+        other_etas = generate_etas(request_data['requests'][request_id])
+        return make_response(render_eta_list_as_html(request_data['requests'][request_id],other_etas),200)
 
 # Define a resource for getting a JSON representation of a help ticket.
 class HelpTicketAsJSON(Resource):

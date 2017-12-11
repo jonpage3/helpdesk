@@ -8,6 +8,7 @@
   <p>Estimated Arrival Date: {{ request.eta }}</p>
   <!---link to sort locations by arrival dates--->
   <a rel="alternate" href="eta2793?sort-by=eta">Sort by Arrival Dates</a>
+
   <table>
     <thead>
       <tr>
@@ -15,26 +16,18 @@
       </tr>
     </thead>
     <tbody>
+    {% for pickup in pickups %}
       <tr>
-        <td class="pickup">Undergraduate Library:</td>
-        <td class="eta">11/17/2017</td>
+        <td class="pickup">{{ pickup }}:</td>
+        <td class="eta">
+            {% if pickup == request.location %}
+               {{other_etas.home}}
+            {% else %}
+               {{other_etas.eta}}
+            {% endif %}
+        </td>
       </tr>
-      <tr>
-        <td class="pickup">Art Library</td>
-        <td class="eta">11/21/2017</td>
-      </tr>
-      <tr>
-        <td class="pickup">Law Library</td>
-        <td class="eta">11/21/2017</td>
-      </tr>
-      <tr>
-        <td class="pickup">SILS Library</td>
-        <td class="eta">11/20/2017</td>
-      </tr>
-      <tr>
-        <td class="pickup">Science Library Annext</td>
-        <td class="eta">11/17/2017</td>
-      </tr>
+    {% endfor %}
     </tbody>
   </table>
   <a rel="item" href="{{ url_for('request',request_id=request.id) }}">View/Update Request Information</a>

@@ -91,7 +91,7 @@ def generate_maxid(requests):
 ##function to help generate ETAs for a request
 def generate_etas(request):
     def eta(num):
-        return (datetime.datetime.now() + datetime.timedelta(days=num)).isoformat(timespec='minutes')
+        return f"{(datetime.datetime.now() + datetime.timedelta(days=num)):%m-%d-%Y}"
 
     other_etas = {}
 
@@ -123,6 +123,7 @@ def generate_etas(request):
             request['eta'] = 'Request Finished'
 
     return other_etas
+
 # Respond with 404 Not Found if no help ticket with the specified ID exists.
 def error_if_helpticket_not_found(helpticket_id):
     if helpticket_id not in data['helptickets']:
@@ -160,6 +161,9 @@ def filter_request(query=''):
     #filtered_requests = filter(matches_query,request_data['requests'].items())
 
     return filter(matches_query,request_data['requests'].items())
+
+def sort_etas(sort_by=''):
+    pass
 
 # Now we define three incoming HTTP request parsers using the Flask-RESTful
 # framework <https://flask-restful.readthedocs.io/en/latest/reqparse.html>.
@@ -222,6 +226,11 @@ query_parser.add_argument(
     'query', type=str, default='')
 #query_parser.add_argument(
 #    'sort_by', type=str, choices=('priority', 'time'), default='time')
+
+#parser for sorting etas
+sort_parser = reqparse.RequestParser()
+sort_parser.add_argument(
+    'sort_by', type=str, choices=('pickup','eta'), default='')
 
 
 # Then we define a couple of helper functions for inserting data into HTML
@@ -359,7 +368,7 @@ class RequestList(Resource):
         request = new_request_parser.parse_args()
         request_id = str(generate_maxid(request_data['requests']) + 1)
         request['@id'] = 'request/' + request_id
-        request['time'] = datetime.datetime.now().isoformat(timespec='minutes')
+        request['time'] = f"{datetime.datetime.now():%m-%d-%Y %H:%M}"
         request['status'] = 'Awaiting Circulation Processing'
         request['id'] = request_id
         request_data['requests'][request_id] = request

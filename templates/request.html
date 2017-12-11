@@ -30,6 +30,10 @@
         <td class="pickup">{{ request.pickup }}</td>
       </tr>
       <tr>
+        <td>Status</td>
+        <td class="status">{{ request.status }}</td>
+      </tr>
+      <tr>
         <td>ETA:</td>
         <td class="eta">2017-11-17</td>
       </tr>
@@ -38,7 +42,7 @@
   </table>
   <br>
   <!-----outbound link to delivery times for different pickup locations---->
-  <a rel="service-locations" href="eta2793">Estimated Delivery Times for Different Pickup Locations</a>
+  <a rel="service-locations" href="eta/{{ request.id }}">Estimated Delivery Times for Different Pickup Locations</a>
   <br>
   <form class="request-update" action="{{ url_for('request',request_id=request_id) }}" method="patch">
     <br>

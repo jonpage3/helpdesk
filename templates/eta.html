@@ -1,0 +1,43 @@
+<!doctype  html>
+<body>
+  
+
+  <h1> Request {{ request.id }}</h1>
+  <p>{{ request.title }}</p>
+  <p>Pickup Location: {{ request.pickup }}</p>
+  <p>Estimated Arrival Date: 11/17/2017</p>
+  <!---link to sort locations by arrival dates--->
+  <a rel="alternate" href="eta2793?sort-by=eta">Sort by Arrival Dates</a>
+  <table>
+    <thead>
+      <tr>
+        <th>Estimated Arrival Dates for different Locations</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="pickup">Undergraduate Library:</td>
+        <td class="eta">11/17/2017</td>
+      </tr>
+      <tr>
+        <td class="pickup">Art Library</td>
+        <td class="eta">11/21/2017</td>
+      </tr>
+      <tr>
+        <td class="pickup">Law Library</td>
+        <td class="eta">11/21/2017</td>
+      </tr>
+      <tr>
+        <td class="pickup">SILS Library</td>
+        <td class="eta">11/20/2017</td>
+      </tr>
+      <tr>
+        <td class="pickup">Science Library Annext</td>
+        <td class="eta">11/17/2017</td>
+      </tr>
+    </tbody>
+  </table>
+  <a rel="item" href="{{ url_for('request',request_id=request.id) }}">View/Update Request Information</a>
+  <br>
+  <a rel="collection" href="{{ url_for('requestlist') }}">Total Requests</a>
+</body>

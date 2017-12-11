@@ -3,11 +3,8 @@
 <body>
 <h1>Requests</h1>
   <!---templated query link to filter by a search term--->
-  <form class="search" action="/Requests" method="get">
+  <form class="search" method="get" action="{{ url_for('requestlist') }}">
     <input name="query" type="text" value="{{ request.args['query'] }}">
-    {% if 'query' in request.args %}
-    <input name="query" type="hidden" value="{{ request.args['query'] }}">
-    {% endif %}
     <input class="query" type="submit" value="search for a request">
   </form>
   <table class="collection">

@@ -122,9 +122,9 @@ def filter_request(query=''):
         text = request['title'] + request['pickup'] + request['status']
         return query.lower() in text
 
-    filtered_requests = filter(matches_query,request_data['requests'].items())
+    #filtered_requests = filter(matches_query,request_data['requests'].items())
 
-    return filtered_requests
+    return filter(matches_query,request_data['requests'].items())
 
 # Now we define three incoming HTTP request parsers using the Flask-RESTful
 # framework <https://flask-restful.readthedocs.io/en/latest/reqparse.html>.
@@ -172,6 +172,13 @@ update_helpticket_parser.add_argument(
 update_helpticket_parser.add_argument(
     'comment', type=str, default='')
 
+#Specify the data necessary to update an existing request
+#only the pickup and notes can be updated
+update_request_parser = reqparse.RequestParser()
+update_request_parser.add_argument(
+    'pickup', type=str, default='')
+update_request_parser.add_argument(
+    'notes', type=str, default='')
 
 # Specify the parameters for filtering and sorting help tickets.
 # See `filter_and_sort_helptickets` above.
@@ -206,6 +213,11 @@ def render_helpticket_list_as_html(helptickets):
         'helptickets+microdata+rdfa.html',
         helptickets=helptickets,
         priorities=PRIORITIES)
+
+def render_eta_list_as_html(request):
+    return render_template(
+        'eta.html',request=request,pickups=PICKUP_LOCATIONS
+    )
 
 def render_request_list_as_html(requests):
     return render_template('Requests.html',requests=requests)
@@ -246,6 +258,20 @@ class Request(Resource):
     # respond with a 404, otherwise respond with an HTML representation
     def get(self, request_id):
         return make_response(render_request_as_html(request_data['requests'][request_id]),200)
+
+    def patch(self,request_id):
+        request = request_data['requests'][request_id]
+        update = update_request_parser.parse_args()
+        request['pickup'] = update['pickup']
+        if len(update['notes'].strip()) > 0:
+            request.setdefault('notes',[]).append(update['notes'])
+        return make_response(render_request_as_html(request),200)
+
+#Define the eta resource
+class ETA(Resource):
+
+    def get(self,request_id):
+        return make_response(render_eta_list_as_html(request_data['requests'][request_id]),200)
 
 # Define a resource for getting a JSON representation of a help ticket.
 class HelpTicketAsJSON(Resource):
@@ -331,7 +357,7 @@ api.add_resource(HelpTicketAsJSON, '/ticket/<string:helpticket_id>.json')
 api.add_resource(New_Display,'/ticket/<string:helpticket_id>/new_display')
 api.add_resource(RequestList,'/requests')
 api.add_resource(Request,'/request/<string:request_id>')
-
+api.add_resource(ETA,'/request/eta/<string:request_id>')
 
 # There is no resource mapped to the root path (/), so if a request comes in
 # for that, redirect to the HelpTicketList resource.

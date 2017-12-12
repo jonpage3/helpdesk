@@ -120,6 +120,8 @@ def filter_request(query=''):
 
     return filter(matches_query,request_data['requests'].items())
 
+#attempt at producing a sorter
+#for etas. unfinished.
 def sort_etas(sort_by=''):
     pass
 

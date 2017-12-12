@@ -57,3 +57,25 @@ __**class/rel Documentation:**__
 
 - service-locations: Links to a collection of locations with information that may be useful for updating a request.
    
+__**JSON-LD**__
+*JSON-LD representations of the types and properties are provided. The JSON-LD @context is defined below*
+
+```javascript
+"@context":
+  { "request_desk": "https://rawgit.com/jonpage3/request_desk/master/vocab.ttl#",
+    "requests":
+    { "@id": "http://www.w3.org/2000/01/rdf-schema#member",
+      "@container": "@index"
+    },
+    "username":"http://schema.org/borrower",
+    "title": "http://schema.org/orderedItem",
+    "oclc": "http://schema.org/identifier",
+    "time": "http://schema.org/dateCreated",
+    "location": "http://schema.org/fromLocation",
+    "pickup": "http://schema.org/deliveryAddress",
+    "callnumber": "http://schema.org/identifier",
+    "id": "http://schema.org/orderNumber",
+    "status": "http://schema.org/orderStatus",
+    "notes": "http://schema.org/comment"
+  }
+```

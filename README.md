@@ -14,6 +14,7 @@ This is an example of a simple web API implemented using
    ```
    
 __**class/rel Documentation:**__
+
 *attribute values describing application flow*
 
 - collection: Describes a collection of requests.

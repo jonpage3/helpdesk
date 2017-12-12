@@ -1,6 +1,24 @@
-{
+{ "@context":
+  { "request_desk": "https://rawgit.com/jonpage3/request_desk/master/vocab.ttl#",
+    "requests":
+    { "@id": "http://www.w3.org/2000/01/rdf-schema#member",
+      "@container": "@index"
+    },
+    "username":"http://schema.org/borrower",
+    "title": "http://schema.org/orderedItem",
+    "oclc": "http://schema.org/identifier",
+    "time": "http://schema.org/dateCreated",
+    "location": "http://schema.org/fromLocation",
+    "pickup": "http://schema.org/deliveryAddress",
+    "callnumber": "http://schema.org/identifier",
+    "id": "http://schema.org/orderNumber",
+    "status": "http://schema.org/orderStatus",
+    "notes": "http://schema.org/comment"
+  },
+  "@id": "requests",
   "requests": {
     "2793": {
+      "@type": "request_desk:BookRequest",
       "username": "jepage",
       "title": "Pride and Prejudice",
       "@id": "request/2793",
@@ -14,6 +32,7 @@
       "notes": []
     },
     "2794": {
+      "@type": "request_desk:BookRequest",
       "username": "jepage",
       "title": "Persuasion",
       "oclc": "709670260",

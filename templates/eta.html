@@ -34,4 +34,7 @@
   <a rel="item" href="{{ url_for('request',request_id=request.id) }}">View/Update Request Information</a>
   <br>
   <a rel="collection" href="{{ url_for('requestlist') }}">Total Requests</a>
+<br>
+<a href="/request/eta/{{ request.id }}.json">
+view ETA in JSON</a>
 </body>

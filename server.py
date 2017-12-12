@@ -185,15 +185,6 @@ def nonempty_string(x):
         raise ValueError('string is empty')
     return s
 
-
-# Specify the data necessary to create a new help ticket.
-# "from", "title", and "description" are all required values.
-#new_helpticket_parser = reqparse.RequestParser()
-#for arg in ['from', 'title', 'description']:
-    #new_helpticket_parser.add_argument(
-        #arg, type=nonempty_string, required=True,
-        #help="'{}' is a required value".format(arg))
-
 # Specify the data necessary to create a new request
 #"title", 'item location', "pickup location" and "oclc" are required values
 new_request_parser = reqparse.RequestParser()
@@ -312,12 +303,26 @@ class Request(Resource):
             request.setdefault('notes',[]).append(update['notes'])
         return make_response(render_request_as_html(request),200)
 
+class RequestAsJSON(Resource):
+
+    def get(self, request_id):
+        request = request_data['requests'][request_id]
+        request['@context'] = request_data['@context']
+        return request
+
 #Define the eta resource
 class ETA(Resource):
 
     def get(self,request_id):
         other_etas = generate_etas(request_data['requests'][request_id])
         return make_response(render_eta_list_as_html(request_data['requests'][request_id],other_etas),200)
+
+class ETAasJSON(Resource):
+
+    def get(self,request_id):
+        other_etas = generate_etas(request_data['requests'][request_id])
+        request_data['@context'] = request_data['@context']
+        return other_etas
 
 # Define a resource for getting a JSON representation of a help ticket.
 class HelpTicketAsJSON(Resource):
@@ -374,6 +379,9 @@ class RequestList(Resource):
         request_data['requests'][request_id] = request
         return make_response(render_request_list_as_html(filter_request()),201)
 
+class RequestListasJson(Resource):
+    def get(self):
+        return request_data
 
 # Define a resource for getting a JSON representation of the help ticket list.
 class HelpTicketListAsJSON(Resource):
@@ -400,13 +408,17 @@ api.add_resource(HelpTicketList, '/tickets')
 api.add_resource(HelpTicketListAsJSON, '/tickets.json')
 api.add_resource(HelpTicket, '/ticket/<string:helpticket_id>')
 api.add_resource(HelpTicketAsJSON, '/ticket/<string:helpticket_id>.json')
-api.add_resource(New_Display,'/ticket/<string:helpticket_id>/new_display')
+
 api.add_resource(RequestList,'/requests')
+api.add_resource(RequestListasJson,'/requests.json')
 api.add_resource(Request,'/request/<string:request_id>')
+api.add_resource(RequestAsJSON,'/request/<string:request_id>.json')
 api.add_resource(ETA,'/request/eta/<string:request_id>')
+api.add_resource(ETAasJSON,'/request/eta/<string:request_id>.json')
+
 
 # There is no resource mapped to the root path (/), so if a request comes in
-# for that, redirect to the HelpTicketList resource.
+# for that, redirect to the RequestList resource.
 @app.route('/')
 def index():
     return redirect(api.url_for(RequestList), code=303)

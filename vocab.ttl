@@ -1,7 +1,7 @@
-@base <https://rawgit.com/sils-webinfo/helpdesk/master/vocab.ttl#> .
+@base <https://rawgit.com/jonpage3/request_desk/master/vocab.ttl#> .
 @schema <http://schema.org/> .
 
-<HelpRequest> 
+<BookRequest>
   a rdf:Class ;
-  rdfs:label "Help Request"@en ;
+  rdfs:label "Book Request"@en ;
   rdfs:subClassOf schema:CreativeWork .

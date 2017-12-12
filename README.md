@@ -60,7 +60,7 @@ __**class/rel Documentation:**__
 __**JSON-LD**__
 *JSON-LD representations of the types and properties are provided. The JSON-LD @context is defined below*
 
-```javascript
+```JSON
 "@context":
   { "request_desk": "https://rawgit.com/jonpage3/request_desk/master/vocab.ttl#",
     "requests":

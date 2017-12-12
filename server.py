@@ -255,7 +255,7 @@ def render_eta_list_as_html(request,other_etas):
     )
 
 def render_request_list_as_html(requests):
-    return render_template('Requests.html',requests=requests)
+    return render_template('Requests.html',requests=requests,pickups=PICKUP_LOCATIONS)
 
 # Now we can start defining our resource classes. We define four classes:
 # HelpTicket, HelpTicketAsJSON, HelpTicketList, and HelpTicketListAsJSON.

@@ -58,6 +58,7 @@ __**class/rel Documentation:**__
 - service-locations: Links to a collection of locations with information that may be useful for updating a request.
    
 __**JSON-LD**__
+
 *JSON-LD representations of the types and properties are provided. The JSON-LD @context is defined below*
 
 ```JSON

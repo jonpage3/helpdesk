@@ -47,28 +47,11 @@
     <label>Title</label>:
       <input name="title" type="text"/>
     <br>
-    <label>Item Location
-      <select name="pickup">
-       <option disabled selected value> -- select an option -- </option>
-       {% for value in pickups %}
-       <option value="{{ value }}">
-           {{ value }}
-       </option>
-       {% endfor %}
-      </select>
-    </label>
-
+      <label>Item Location</label>:
+      <input name="location" type="text"/>
      <br>
-    <label>Pickup Location
-        <select name="pickup">
-       <option disabled selected value> -- select an option -- </option>
-       {% for value in pickups %}
-       <option value="{{ value }}">
-           {{ value }}
-       </option>
-       {% endfor %}
-        </select>
-    </label>
+    <label>Pickup Location</label>:
+      <input name="pickup" type="text"/>
     <br>
     <label>OCLC #</label>:
       <input name="oclc" type="text"/>
